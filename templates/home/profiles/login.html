@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Gov Portal | Secure Login</title>
+</head>
+
+<body class="bg-gray-50 flex items-center justify-center min-h-screen border-t-8 border-[#FF9933]">
+
+    <body class="bg-gray-50 flex items-center justify-center min-h-screen border-t-8 border-[#FF9933]">
+
+        <div class="w-full max-w-md bg-white shadow-2xl rounded-xl overflow-hidden border border-gray-200">
+            <div class="bg-[#000080] p-6 text-center">
+                <div class="inline-block p-3 bg-white rounded-full mb-3">
+                    <div class="w-12 h-12 flex items-center justify-center font-bold text-[#000080]">GOV</div>
+                </div>
+                <h2 class="text-white text-2xl font-bold tracking-wide uppercase">Official Login</h2>
+                <p class="text-blue-100 text-sm opacity-80">Access your secure dashboard</p>
+            </div>
+
+            <form method="POST" action="{% url 'login' %}" class="p-8 space-y-6">
+                {% csrf_token %}
+
+                {% if error %}
+                <p class="text-red-500 text-xs font-bold bg-red-50 p-2 rounded border border-red-200 text-center">{{
+                    error }}</p>
+                {% endif %}
+
+                <div class="relative">
+                    <label class="block text-sm font-semibold text-[#000080] mb-2">Email</label>
+                    <input type="email" name="email" id="email" required placeholder="Enter your email"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#FF9933] focus:outline-none transition-all">
+                    <button type="button" onclick="startVoice('email')"
+                        class="absolute right-3 top-10 text-gray-400">🎤</button>
+                </div>
+
+                <div class="relative">
+                    <label class="block text-sm font-semibold text-[#000080] mb-2">Username</label>
+                    <input type="text" name="username" id="username" required placeholder="Enter your username"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#FF9933] focus:outline-none transition-all">
+                    <button type="button" onclick="startVoice('username')"
+                        class="absolute right-3 top-10 text-gray-400">🎤</button>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-[#000080] mb-2">Password</label>
+                    <input type="password" name="password" required placeholder="••••••••"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#FF9933] focus:outline-none transition-all">
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-[#000080] hover:bg-[#000066] text-white font-bold py-3 rounded-lg shadow-lg transform active:scale-95 transition-all">
+                    Login to Account
+                </button>
+            </form>
+        </div>
+
+        <script>
+            function startVoice(fieldId) {
+                const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.lang = 'en-IN';
+                recognition.start();
+                recognition.onresult = function (event) {
+                    document.getElementById(fieldId).value = event.results[0][0].transcript.replace(/\s/g, '').toLowerCase();
+                }
+            }
+        </script>
+    </body>
+</body>
+
+</html>
