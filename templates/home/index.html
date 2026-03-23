@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SchemeScout — Government Scheme Finder</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --navy: #1A3A6B;
+      --navy-dark: #0F2548;
+      --navy-light: #2952A3;
+      --saffron: #FF6B00;
+      --saffron-light: #FF8C35;
+      --green: #217A3C;
+      --white: #FFFFFF;
+      --offwhite: #F4F6FB;
+      --border: #D6E0F0;
+      --text: #1A2B4A;
+      --muted: #5A6B8A;
+      --light: #EBF0FA;
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: 'Noto Sans', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      overflow-x: hidden
+    }
+
+    /* TOP STRIP */
+    .top-strip {
+      background: var(--navy-dark);
+      padding: 0.4rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .strip-left {
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.55);
+      letter-spacing: 0.3px
+    }
+
+    .strip-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem
+    }
+
+    .strip-right a {
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.55);
+      text-decoration: none;
+      transition: color 0.2s
+    }
+
+    .strip-right a:hover {
+      color: var(--saffron)
+    }
+
+    .strip-divider {
+      width: 1px;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.15)
+    }
+
+    /* NAV */
+    nav {
+      background: var(--white);
+      border-bottom: 3px solid var(--saffron);
+      padding: 0 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 72px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06)
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1rem
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--navy-dark);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column
+    }
+
+    .logo-main {
+      font-family: 'Noto Serif', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--navy-dark);
+      letter-spacing: 0.3px
+    }
+
+    .logo-main span {
+      color: var(--saffron)
+    }
+
+    .logo-sub {
+      font-size: 0.62rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 1px
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0;
+      list-style: none;
+      height: 72px;
+      align-items: center
+    }
+
+    .nav-links li {
+      height: 100%
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 0 1.2rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -3px;
+      transition: all 0.2s
+    }
+
+    .nav-links a:hover {
+      color: var(--navy);
+      border-bottom-color: var(--navy)
+    }
+
+    .nav-links a.active {
+      color: var(--saffron);
+      border-bottom-color: var(--saffron)
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem
+    }
+
+    .lang-select {
+      background: var(--offwhite);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.78rem;
+      color: var(--text);
+      font-family: 'Noto Sans', sans-serif;
+      cursor: pointer;
+      outline: none
+    }
+
+    .btn-login {
+      background: transparent;
+      color: var(--navy);
+      padding: 0.5rem 1.2rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1.5px solid var(--navy);
+      transition: all 0.2s
+    }
+
+    .btn-login:hover {
+      background: var(--navy);
+      color: var(--white)
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 55%, var(--navy-light) 100%);
+      padding: 5rem 4rem;
+      position: relative;
+      overflow: hidden
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none
+    }
+
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 5rem;
+      align-items: center;
+      position: relative;
+      z-index: 1
+    }
+
+    .hero-left {
+      animation: fadeUp 0.8s ease both
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 107, 0, 0.15);
+      border: 1px solid rgba(255, 107, 0, 0.3);
+      border-radius: 3px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--saffron);
+      margin-bottom: 1.5rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--saffron);
+      animation: blink 2s infinite
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0.3
+      }
+    }
+
+    h1 {
+      font-family: 'Noto Serif', serif;
+      font-size: 3.2rem;
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--white);
+      margin-bottom: 1.2rem
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--saffron);
+      font-weight: 400
+    }
+
+    .hero-desc {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.8;
+      max-width: 460px;
+      margin-bottom: 2.5rem;
+      font-weight: 300
+    }
+
+    .hero-desc strong {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500
+    }
+
+    .hero-form {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin-bottom: 2rem
+    }
+
+    .form-label {
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 0.8rem;
+      display: block
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin-bottom: 0.6rem
+    }
+
+    .form-select {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 4px;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.8);
+      font-family: 'Noto Sans', sans-serif;
+      outline: none;
+      width: 100%;
+      cursor: pointer
+    }
+
+    .form-select option {
+      background: var(--navy-dark);
+      color: var(--white)
+    }
+
+    .btn-check {
+      background: var(--saffron);
+      color: #fff;
+      padding: 0.75rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+      letter-spacing: 0.5px;
+      margin-top: 0.4rem;
+      font-family: 'Noto Sans', sans-serif
+    }
+
+    .btn-check:hover {
+      background: var(--saffron-light);
+      transform: translateY(-1px)
+    }
+
+    .hero-trust {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.45)
+    }
+
+    .trust-icon {
+      color: var(--saffron)
+    }
+
+    /* HERO RIGHT */
+    .hero-right {
+      animation: fadeUp 0.8s 0.15s ease both;
+      opacity: 0;
+      animation-fill-mode: both
+    }
+
+    .result-card {
+      background: var(--white);
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border)
+    }
+
+    .result-card-header {
+      background: var(--navy-dark);
+      padding: 1rem 1.2rem;
+      border-bottom: 2px solid var(--saffron);
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .result-card-title {
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55)
+    }
+
+    .result-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem
+    }
+
+    .result-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--saffron);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #fff
+    }
+
+    .result-name {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.7)
+    }
+
+    .result-body {
+      padding: 1.2rem
+    }
+
+    .result-banner {
+      background: linear-gradient(135deg, #FFF4EC, #FFF9F5);
+      border: 1px solid rgba(255, 107, 0, 0.2);
+      border-radius: 5px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 0.8rem;
+      align-items: center
+    }
+
+    .result-banner-icon {
+      width: 38px;
+      height: 38px;
+      background: var(--saffron);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0
+    }
+
+    .result-banner-label {
+      font-size: 0.62rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--saffron);
+      font-weight: 600;
+      margin-bottom: 2px
+    }
+
+    .result-banner-amount {
+      font-family: 'Noto Serif', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--navy-dark)
+    }
+
+    .result-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem;
+      margin-bottom: 1rem
+    }
+
+    .rs {
+      background: var(--offwhite);
+      border-radius: 5px;
+      padding: 0.7rem 0.5rem;
+      text-align: center;
+      border: 1px solid var(--border)
+    }
+
+    .rs-num {
+      font-family: 'Noto Serif', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--navy-dark)
+    }
+
+    .rs-lbl {
+      font-size: 0.58rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .rs.g .rs-num {
+      color: var(--green)
+    }
+
+    .rs.o .rs-num {
+      color: var(--saffron)
+    }
+
+    .scheme-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem
+    }
+
+    .si {
+      background: var(--offwhite);
+      border-radius: 5px;
+      padding: 0.75rem 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--border)
+    }
+
+    .si-name {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--navy-dark)
+    }
+
+    .si-meta {
+      font-size: 0.6rem;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .verified {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 0.56rem;
+      color: var(--green);
+      background: #E8F5EE;
+      padding: 1px 5px;
+      border-radius: 2px;
+      margin-left: 4px;
+      font-weight: 600
+    }
+
+    .sbadge {
+      font-size: 0.6rem;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-weight: 600;
+      flex-shrink: 0
+    }
+
+    .bg {
+      background: #E8F5EE;
+      color: var(--green)
+    }
+
+    .bo {
+      background: #FFF0E6;
+      color: var(--saffron)
+    }
+
+    /* MARQUEE */
+    .marquee-wrap {
+      background: var(--offwhite);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 0.7rem 0;
+      overflow: hidden
+    }
+
+    .marquee-inner {
+      display: flex;
+      animation: marquee 30s linear infinite;
+      white-space: nowrap
+    }
+
+    .mi {
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      color: var(--muted);
+      padding: 0 1.5rem;
+      flex-shrink: 0
+    }
+
+    .mi span {
+      color: var(--saffron);
+      margin-right: 1.5rem
+    }
+
+    @keyframes marquee {
+      from {
+        transform: translateX(0)
+      }
+
+      to {
+        transform: translateX(-50%)
+      }
+    }
+
+    /* HOW IT WORKS */
+    .how {
+      padding: 5rem 4rem;
+      background: var(--white)
+    }
+
+    .how-inner {
+      max-width: 1100px;
+      margin: 0 auto
+    }
+
+    .section-header {
+      margin-bottom: 3.5rem
+    }
+
+    .section-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.8rem
+    }
+
+    .tag-bar {
+      width: 28px;
+      height: 3px;
+      background: var(--saffron);
+      border-radius: 2px
+    }
+
+    .tag-txt {
+      font-size: 0.68rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--saffron);
+      font-weight: 600
+    }
+
+    .section-title {
+      font-family: 'Noto Serif', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--navy-dark);
+      margin-bottom: 0.6rem
+    }
+
+    .section-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+      font-weight: 300;
+      max-width: 500px
+    }
+
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden
+    }
+
+    .how-step {
+      background: var(--white);
+      padding: 2.2rem 2rem;
+      position: relative;
+      transition: background 0.2s
+    }
+
+    .how-step:hover {
+      background: var(--offwhite)
+    }
+
+    .how-step-num {
+      font-family: 'Noto Serif', serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--saffron);
+      letter-spacing: 2px;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem
+    }
+
+    .how-step-num::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border)
+    }
+
+    .how-step-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      display: block
+    }
+
+    .how-step h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy-dark);
+      margin-bottom: 0.5rem
+    }
+
+    .how-step p {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.7;
+      font-weight: 300
+    }
+
+    .how-step-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--saffron);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s
+    }
+
+    .how-step:hover .how-step-bar {
+      transform: scaleX(1)
+    }
+
+    /* CTA */
+    .cta {
+      background: var(--navy-dark);
+      padding: 5rem 4rem;
+      text-align: center;
+      border-top: 4px solid var(--saffron)
+    }
+
+    .cta-inner {
+      max-width: 600px;
+      margin: 0 auto
+    }
+
+    .cta-tag {
+      display: inline-block;
+      background: rgba(255, 107, 0, 0.15);
+      border: 1px solid rgba(255, 107, 0, 0.3);
+      border-radius: 3px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.68rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--saffron);
+      margin-bottom: 1.5rem
+    }
+
+    .cta-title {
+      font-family: 'Noto Serif', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 0.8rem
+    }
+
+    .cta-title em {
+      font-style: italic;
+      color: var(--saffron);
+      font-weight: 400
+    }
+
+    .cta-sub {
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.45);
+      margin-bottom: 2rem;
+      line-height: 1.7;
+      font-weight: 300
+    }
+
+    .btn-cta {
+      background: var(--saffron);
+      color: #fff;
+      padding: 0.9rem 2.5rem;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+      letter-spacing: 0.5px
+    }
+
+    .btn-cta:hover {
+      background: var(--saffron-light);
+      transform: translateY(-2px)
+    }
+
+    .cta-note {
+      font-size: 0.68rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.25);
+      margin-top: 1.2rem
+    }
+
+    /* FOOTER */
+    footer {
+      background: #060F24;
+      padding: 1.5rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .footer-logo {
+      font-family: 'Noto Serif', serif;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.4);
+      font-style: italic
+    }
+
+    .footer-logo span {
+      color: var(--saffron)
+    }
+
+    .footer-mid {
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.25);
+      text-align: center
+    }
+
+    .footer-mid a {
+      color: rgba(255, 255, 255, 0.35);
+      text-decoration: none
+    }
+
+    .footer-right {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.2);
+      text-align: right
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: all 0.6s ease
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    @media(max-width:900px) {
+
+      .top-strip,
+      .nav-links {
+        display: none
+      }
+
+      nav {
+        padding: 0 1.5rem
+      }
+
+      .hero {
+        padding: 3rem 1.5rem
+      }
+
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 2.5rem
+      }
+
+      h1 {
+        font-size: 2.2rem
+      }
+
+      .form-row {
+        grid-template-columns: 1fr
+      }
+
+      .how {
+        padding: 3.5rem 1.5rem
+      }
+
+      .how-steps {
+        grid-template-columns: 1fr
+      }
+
+      .cta {
+        padding: 3.5rem 1.5rem
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 0.6rem;
+        text-align: center;
+        padding: 1.5rem
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOP STRIP -->
+  <div class="top-strip">
+    <span class="strip-left">🇮🇳 Government Scheme Finder — India</span>
+    <div class="strip-right">
+      <a href="#">Help</a>
+      <div class="strip-divider"></div>
+      <a href="#">Contact</a>
+      <div class="strip-divider"></div>
+      <a href="#">myscheme.gov.in ↗</a>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo-wrap">
+      <div class="logo-icon">🎯</div>
+      <div class="logo-text">
+        <div class="logo-main">Scheme<span>Scout</span></div>
+        <div class="logo-sub">Government Scheme Finder</div>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#" class="active">Home</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#schemes">Schemes</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <div class="nav-right">
+      <select class="lang-select">
+        <option>🌐 Language</option>
+        <option>हिंदी</option>
+        <option>English</option>
+        <option>বাংলা(Bengali)</option>
+        <option>தமிழ்(Tamil)</option>
+        <option>తెలుగు(Telugu)</option>
+        <option>ਪੰਜਾਬੀ(Punjabi)</option>
+        <option>मराठी(Marathi)</option>
+        <option>ಕನ್ನಡ(Kannada)</option>
+        <option>ગુજરાતી(Gujarati)</option>
+        <option>भोजपुरी(Bhojpuri)</option>
+        <option>ଓଡ଼ିଆ(Odia)</option>
+        <option>অসমীয়া(Assamese)</option>
+        <option>اردو(Urdu)</option>
+        <option>मैथिली(Maithili)</option>
+        <option>ᱥᱟᱱᱤᱭᱟᱹ(Santali)</option>
+        <option>कश्मीरी(Kashmiri)</option>
+        <option>सिंधी(Sindhi)</option>
+        <option>മലയാളം(Malayalam)</option>
+
+        
+      </select>
+      <a href="#" class="btn-login">Login / Register</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-badge">
+          <div class="live-dot"></div> AI Powered · Free · Verified
+        </div>
+        <h1>Find government<br />schemes <em>made for you</em></h1>
+        <p class="hero-desc">Fill a <strong>2-minute profile</strong> and our AI instantly finds every central & state
+          scheme you're eligible for — with documents, deadlines, and official apply links.</p>
+        <div class="hero-trust">
+          <div class="trust-item"><span class="trust-icon">✅</span> Verified gov.in sources</div>
+          <div class="trust-item"><span class="trust-icon">🔒</span> 100% private & secure</div>
+          <div class="trust-item"><span class="trust-icon">🆓</span> Completely free</div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="result-card">
+          <div class="result-card-header">
+            <span class="result-card-title">Eligibility Report</span>
+            <div class="result-profile">
+              <div class="result-avatar">R</div>
+              <span class="result-name">Rahul · UP · OBC</span>
+            </div>
+          </div>
+          <div class="result-body">
+            <div class="result-banner">
+              <div class="result-banner-icon">🎯</div>
+              <div>
+                <div class="result-banner-label">Schemes Waiting For You</div>
+                <div class="result-banner-amount">₹3.8 lakh in benefits</div>
+              </div>
+            </div>
+            <div class="result-stats">
+              <div class="rs">
+                <div class="rs-num">14</div>
+                <div class="rs-lbl">Found</div>
+              </div>
+              <div class="rs g">
+                <div class="rs-num">₹3.8L</div>
+                <div class="rs-lbl">Total</div>
+              </div>
+              <div class="rs o">
+                <div class="rs-num">3</div>
+                <div class="rs-lbl">Expiring</div>
+              </div>
+            </div>
+            <div class="scheme-list">
+              <div class="si">
+                <div>
+                  <div class="si-name">PM Scholarship <span class="verified">✓ verified</span></div>
+                  <div class="si-meta">Central · Education · 94% match</div>
+                </div>
+                <span class="sbadge bg">₹25,000/yr</span>
+              </div>
+              <div class="si">
+                <div>
+                  <div class="si-name">Ayushman Bharat <span class="verified">✓ verified</span></div>
+                  <div class="si-meta">Central · Health · 98% match</div>
+                </div>
+                <span class="sbadge bg">₹5L cover</span>
+              </div>
+              <div class="si">
+                <div>
+                  <div class="si-name">UP Kisan Karj Rahat <span class="verified">✓ verified</span></div>
+                  <div class="si-meta">State · 8 days left!</div>
+                </div>
+                <span class="sbadge bo">Urgent!</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-inner">
+      <span class="mi"><span>✦</span> PM Kisan Samman Nidhi</span>
+      <span class="mi"><span>✦</span> Ayushman Bharat Yojana</span>
+      <span class="mi"><span>✦</span> PM Scholarship Scheme</span>
+      <span class="mi"><span>✦</span> Beti Bachao Beti Padhao</span>
+      <span class="mi"><span>✦</span> Sukanya Samriddhi Yojana</span>
+      <span class="mi"><span>✦</span> PM Awas Yojana</span>
+      <span class="mi"><span>✦</span> Skill India Mission</span>
+      <span class="mi"><span>✦</span> NSP Scholarship</span>
+      <span class="mi"><span>✦</span> PM Fasal Bima Yojana</span>
+      <span class="mi"><span>✦</span> Janani Suraksha Yojana</span>
+      <span class="mi"><span>✦</span> PM Kisan Samman Nidhi</span>
+      <span class="mi"><span>✦</span> Ayushman Bharat Yojana</span>
+      <span class="mi"><span>✦</span> PM Scholarship Scheme</span>
+      <span class="mi"><span>✦</span> Beti Bachao Beti Padhao</span>
+      <span class="mi"><span>✦</span> Sukanya Samriddhi Yojana</span>
+      <span class="mi"><span>✦</span> PM Awas Yojana</span>
+      <span class="mi"><span>✦</span> Skill India Mission</span>
+      <span class="mi"><span>✦</span> NSP Scholarship</span>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <div class="how-inner">
+      <div class="section-header">
+        <div class="section-tag">
+          <div class="tag-bar"></div><span class="tag-txt">The process</span>
+        </div>
+        <div class="section-title">How SchemeScout works</div>
+        <p class="section-sub">No confusion, no paperwork. Fill your profile once and get matched to every scheme you
+          deserve.</p>
+      </div>
+      <div class="how-steps">
+        <div class="how-step reveal">
+          <div class="how-step-bar"></div>
+          <div class="how-step-num">STEP 01</div>
+          <span class="how-step-icon">🎤</span>
+          <h3>Fill your profile</h3>
+          <p>Enter details by voice or text — in Hindi, English, or your mother tongue. Takes under 2 minutes. No typing
+            needed.</p>
+        </div>
+        <div class="how-step reveal">
+          <div class="how-step-bar"></div>
+          <div class="how-step-num">STEP 02</div>
+          <span class="how-step-icon">🤖</span>
+          <h3>AI matches your schemes</h3>
+          <p>Gemini AI cross-references your profile against 1000+ central and state schemes — returns only what you
+            qualify for, ranked by match score.</p>
+        </div>
+        <div class="how-step reveal">
+          <div class="how-step-bar"></div>
+          <div class="how-step-num">STEP 03</div>
+          <span class="how-step-icon">📋</span>
+          <h3>Apply with confidence</h3>
+          <p>Get your document checklist, step-by-step guide, and direct official apply link. Download your PDF report
+            and get weekly WhatsApp updates.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="cta-inner">
+      <div class="cta-tag">Free · Verified · Multilingual</div>
+      <div class="cta-title">Your benefits are<br /><em>waiting for you 🇮🇳</em></div>
+      <p class="cta-sub">2 minutes. Free forever. In your language. No Aadhaar needed to check eligibility.</p>
+      <a href="#" class="btn-cta">Check My Eligibility Now →</a>
+      <div class="cta-note">Sirf Sunday · Sirf 3 schemes · Sirf aapke liye</div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">Scheme<span>Scout</span></div>
+    <div class="footer-mid">Built for India · FLARE 1.0 Hackathon · <a
+        href="https://github.com/aayushisoni7976/schemescout">GitHub ↗</a></div>
+    <div class="footer-right">© 2026 SchemeScout<br />Data from myscheme.gov.in</div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') })
+    }, { threshold: 0.1 })
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+  </script>
+</body>
+
+</html>
