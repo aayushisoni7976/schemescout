@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -16,7 +17,7 @@ SECRET_KEY = 'django-insecure-dhruc0v^s87-nz4!1ydf_sa--2!b7&%-0r@m76lrvmy7i*%rvc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -35,7 +36,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware', 
-    'django.middleware.locale.LocaleMiddleware',           
     'django.middleware.common.CommonMiddleware',           
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -100,41 +100,24 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-LANGUAGES = [
-    ('en', 'English'),
-    ('hi', 'Hindi'),
-    ('ta', 'Tamil'),
-    ('te', 'Telugu'),
-    ('kn', 'Kannada'),
-    ('ml', 'Malayalam'),
-    ('bn', 'Bengali'),
-    ('gu', 'Gujarati'),
-    ('or', 'Odia'),
-    ('pa', 'Punjabi'),
-    ('ur', 'Urdu'),
-    ('as', 'Assamese'),
-    ('ma', 'Marathi'),
-    ('ne', 'Nepali'),
-    ('ks', 'Kashmiri'),
-    ('sd', 'Sindhi'),
-    ('sat', 'Santali'),
-    ('mai', 'Maithili'),
-    ('bh', 'Bhojpuri'),
-    
-]
+
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
+USE_I18N = False
 
 USE_TZ = True
 
-import os
-LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
-]
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+LOGIN_REDIRECT_URL = 'check_profile'
+
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

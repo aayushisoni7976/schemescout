@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google" content="notranslate" />
   <title>SchemeScout — Government Scheme Finder</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap"
@@ -930,6 +931,31 @@
         padding: 1.5rem
       }
     }
+
+
+    /* Google Translate Toolbar ko puri tarah remove karne ke liye */
+    .goog-te-banner-frame.skiptranslate,
+    .goog-te-banner-frame {
+      display: none !important;
+    }
+
+    body {
+      top: 0px !important;
+    }
+
+    /* Jab toolbar hide hota hai toh body mein margin aa jati hai, usko fix karne ke liye */
+    .skiptranslate {
+      display: none !important;
+    }
+
+    iframe.goog-te-banner-frame {
+      display: none !important;
+    }
+
+    /* Page shifting fix */
+    body {
+      position: static !important;
+    }
   </style>
 </head>
 
@@ -983,8 +1009,8 @@
         <option>कश्मीरी(Kashmiri)</option>
         <option>सिंधी(Sindhi)</option>
         <option>മലയാളം(Malayalam)</option>
-         <option>नेपाली(Nepali)</option>
-        
+        <option>नेपाली(Nepali)</option>
+
       </select>
       <a href="{% url 'login' %}" class="btn-login">Login / Register</a>
     </div>
@@ -1154,6 +1180,72 @@
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') })
     }, { threshold: 0.1 })
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+  </script>
+
+  <div id="google_translate_element"></div>
+
+  <script>
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <script>
+    document.querySelector('.lang-select').addEventListener('change', function () {
+      const langMap = {
+        'हिंदी': 'hi',
+        'English': 'en',
+        'বাংলা(Bengali)': 'bn',
+        'தமிழ்(Tamil)': 'ta',
+        'తెలుగు(Telugu)': 'te',
+        'ਪੰਜਾਬੀ(Punjabi)': 'pa',
+        'मराठी(Marathi)': 'mr',
+        'ಕನ್ನಡ(Kannada)': 'kn',
+        'ગુજરાતી(Gujarati)': 'gu',
+        'മലയാളം(Malayalam)': 'ml',
+        'ଓଡ଼ିଆ(Odia)': 'or',
+        'অসমীয়া(Assamese)': 'as',
+        'اردو(Urdu)': 'ur',
+        'नेपाली(Nepali)': 'ne',
+      }
+
+      const code = langMap[this.value];
+      if (!code) return;
+
+      if (code === 'en') {
+        // --- BRAHMASTRA START ---
+        // 1. Saari Cookies delete karo
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i];
+          const eqPos = cookie.indexOf("=");
+          const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+          document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+          document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=" + window.location.hostname;
+        }
+
+        // 2. LocalStorage aur SessionStorage saaf karo
+        localStorage.clear();
+        sessionStorage.clear();
+
+        // 3. Hard Redirect to homepage (Clean URL)
+        window.location.href = window.location.origin + window.location.pathname;
+        // --- BRAHMASTRA END ---
+      } else {
+        const tryTranslate = setInterval(() => {
+          const select = document.querySelector('.goog-te-combo');
+          if (select) {
+            select.value = code;
+            select.dispatchEvent(new Event('change'));
+            clearInterval(tryTranslate);
+          }
+        }, 500);
+      }
+    });
   </script>
 </body>
 

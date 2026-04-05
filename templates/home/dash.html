@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>SchemeScout Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { 900: '#001f3f', 800: '#003366' },
+                        saffron: { 500: '#FF9933' }
+                    }
+                }
+            }
+        }
+
+    </script>
+    <style>
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .bot-animate {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Cards ko ek line mein lane ke liye container */
+        .scheme-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
+
+        .scheme-card {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #eee;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .scheme-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(255, 140, 0, 0.15);
+            border-color: #ff8c00;
+        }
+
+        /* Match Score Badge */
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #e7f9ee;
+            color: #27ae60;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .scheme-card h3 {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-right: 60px;
+            /* Space for badge */
+        }
+
+        .description {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .amount-section {
+            margin-bottom: 15px;
+        }
+
+        .price-tag {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #ff8c00;
+            /* Angaar Orange */
+        }
+
+        .benefit-text {
+            font-size: 0.85rem;
+            color: #444;
+            background: #fdf2e9;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        /* Apply Now Button */
+        .apply-btn {
+            display: block;
+            text-align: center;
+            background: #ff8c00;
+            color: white !important;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: 0.2s;
+        }
+
+        .apply-btn:hover {
+            background: #e67e00;
+            box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+    <header class="bg-navy-900 text-white shadow-2xl border-b-4 border-saffron-500">
+        <div class="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center">
+            <div class="text-center md:text-left">
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">
+                    Namaste, <span class="text-saffron-500">{{profile.full_name|default:request.user.username|title}}
+                </h1>
+
+            </div>
+
+            <div class="flex gap-4 mt-8 md:mt-0">
+                <div
+                    class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-center min-w-[110px] shadow-inner">
+                    <span class="block text-3xl font-black text-saffron-500">{{ schemes_count }}</span>
+                    <span class="text-[11px] font-bold uppercase tracking-widest opacity-70">Matched</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+
+            <div
+                class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-8 flex flex-col items-center justify-center text-center hover:shadow-xl transition-all duration-300 border-b-8 border-saffron-500 min-h-[200px]">
+                <div class="bg-orange-50 w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-4">🎯</div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Matched Schemes</p>
+                <h2 class="text-4xl font-black text-navy-900">{{ schemes_count|default:"3" }}</h2>
+            </div>
+
+            <div
+                class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-8 flex flex-col items-center justify-center text-center hover:shadow-xl transition-all duration-300 border-b-8 border-green-500 min-h-[200px]">
+                <div class="bg-green-50 w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-4">💰</div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Total Benefits</p>
+                <h2 class="text-3xl font-black text-navy-900">₹{{ total_benefits|default:"45,000" }}</h2>
+            </div>
+
+            <div
+                class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-8 flex flex-col items-center justify-center text-center hover:shadow-xl transition-all duration-300 border-b-8 border-red-500 min-h-[200px]">
+                <div class="bg-red-50 w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-4">⏰</div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Expiring Soon</p>
+                <h2 class="text-4xl font-black text-navy-900">{{ expiring_count|default:"2" }}</h2>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 py-10">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h2 class="text-2xl font-black text-navy-900">My Documents Vault 📂</h2>
+                <p class="text-xs text-gray-400 mt-1">WhatsApp se bheje gaye saare documents yahan save hain.</p>
+            </div>
+            <span class="bg-navy-900 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg">
+                Total: {{ documents.count|default:"0" }}
+            </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+            {% for doc in documents %}
+            <div
+                class="bg-white rounded-[2rem] overflow-hidden shadow-sm border border-gray-100 group hover:shadow-2xl transition-all duration-300">
+                <div class="relative aspect-[4/3] bg-gray-100 overflow-hidden">
+                    <img src="{{ doc.image.url }}" alt="Document"
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <div
+                        class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                        <a href="{{ doc.image.url }}" target="_blank"
+                            class="bg-white p-2 rounded-full text-navy-900 hover:bg-saffron-500 hover:text-white transition">
+                            👁️
+                        </a>
+                    </div>
+                </div>
+
+                <div class="p-5 text-center">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Received On</p>
+                    <p class="text-sm font-black text-navy-900">{{ doc.uploaded_at|date:"d M, Y" }}</p>
+
+                    <div class="mt-4 pt-4 border-t border-gray-50 flex justify-between items-center">
+                        <span
+                            class="text-[9px] font-bold text-green-500 bg-green-50 px-2 py-1 rounded-md">VERIFIED</span>
+                        <button class="text-gray-300 hover:text-red-500 transition text-sm">🗑️</button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div
+                class="col-span-full bg-white p-12 rounded-[2.5rem] border-2 border-dashed border-gray-100 text-center">
+                <div class="text-4xl mb-4">📤</div>
+                <h4 class="text-navy-900 font-bold">Koi document nahi mila</h4>
+                <p class="text-xs text-gray-400 mt-2">WhatsApp bot par photo bhejein, wo yahan apne aap aa jayegi.</p>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <main class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <aside class="lg:col-span-4">
+            <div class="bg-white rounded-3xl shadow-lg p-6 border border-gray-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-navy-900">My Profile 👤</h3>
+                    <a href="{% url 'register' %}"
+                        class="text-xs bg-saffron-500 text-white px-2 py-1 rounded-full font-bold">Edit</a>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between border-b border-gray-50 pb-3">
+                        <span class="text-gray-500">Age (DOB based)</span>
+                        <span class="font-bold text-navy-900">{{ profile.current_age }} Years</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-50 pb-3">
+                        <span class="text-gray-500">State</span>
+                        <span class="font-bold text-navy-900">{{ profile.state }}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-50 pb-3">
+                        <span class="text-gray-500">Income</span>
+                        <span class="font-bold text-green-600">₹{{ profile.annual_income|floatformat:0 }}</span>
+                    </div>
+                    <div class="flex justify-between border-b border-gray-50 pb-3">
+                        <span class="text-gray-500">Category</span>
+                        <span class="font-bold text-navy-900">{{ profile.category }}</span>
+                    </div>
+                </div>
+                <button
+                    class="w-full mt-8 bg-navy-800 text-white py-4 rounded-2xl font-bold hover:bg-navy-900 transition shadow-lg">
+                    📥 Download Benefit PDF
+                </button>
+            </div>
+        </aside>
+
+        <section class="lg:col-span-8 space-y-6">
+            <div class="flex items-center justify-between">
+                <h2 class="text-2xl font-bold text-navy-900">Recommended Schemes 🎯</h2>
+                <span
+                    class="text-xs font-bold text-green-600 px-3 py-1 bg-green-50 rounded-full border border-green-200 uppercase">AI
+                    Verified</span>
+            </div>
+
+            <div
+                class="bg-white rounded-3xl p-6 shadow-md border-l-8 border-saffron-500 hover:shadow-xl transition-all group">
+                <div class="scheme-grid-container"> {% for scheme in schemes %}
+                    <div class="scheme-card">
+                        <div class="card-badge">{{ scheme.match_score }}% match</div>
+
+                        <h3>{{ scheme.name }}</h3>
+
+                        <p class="description">{{ scheme.description }}</p>
+
+                        <div class="amount-section">
+                            <span class="price-tag">₹{{ scheme.amount }}</span>
+                        </div>
+
+                        <p class="benefit-text"><b>Benefit:</b> {{ scheme.benefit }}</p>
+
+                        <div class="card-footer">
+                            <a href="{{ scheme.apply_link }}" target="_blank" class="apply-btn">
+                                Apply Now →
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="mt-8 pt-4 border-t border-gray-50 flex justify-between items-center">
+                    <span class="text-xs text-green-500 font-bold flex items-center">
+                        <span class="mr-1">●</span> Official Govt. Source
+                    </span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="ai-bot" class="fixed bottom-8 right-8 z-50">
+        <div id="chat-window"
+            class="hidden mb-4 w-[350px] h-[450px] bg-white rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transition-all transform scale-100">
+            <div class="bg-navy-900 p-5 text-white flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-saffron-500 rounded-full flex items-center justify-center font-bold">AI</div>
+                    <span class="font-bold text-sm tracking-wide">SchemeScout Assistant</span>
+                </div>
+                <button onclick="toggleChat()" class="text-gray-400 hover:text-white text-xl">✕</button>
+            </div>
+            <div class="flex-grow p-6 overflow-y-auto bg-gray-50 space-y-4" id="messages">
+                <div
+                    class="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 text-sm text-gray-700 leading-relaxed">
+                    Namaste <b>{{ profile.full_name|default:request.user.username }}</b>! Main aapke data ke hisab se
+                    best schemes suggest kar sakta hoon. Poochiye!
+                </div>
+            </div>
+            <div class="p-4 bg-white border-t flex gap-2">
+                <input type="text" placeholder="Type in Hindi or English..."
+                    class="flex-grow p-4 bg-gray-100 border-none rounded-2xl text-sm focus:ring-2 focus:ring-saffron-500 outline-none">
+                <button class="bg-navy-900 text-white p-4 rounded-2xl hover:bg-saffron-500 transition">🎤</button>
+            </div>
+        </div>
+
+        <button onclick="toggleChat()"
+            class="float-right w-20 h-20 bg-navy-900 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all bot-animate border-4 border-saffron-500">
+            <span class="text-3xl text-white">🤖</span>
+        </button>
+        <div id="whatsapp-icon" class="fixed bottom-8 left-8 z-50">
+            <a href="https://wa.me/14155238886" target="_blank"
+                class="w-16 h-16 bg-[#25D366] rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 border-4 border-white group relative">
+
+                <i class="fab fa-whatsapp text-4xl text-white"></i>
+
+                <span
+                    class="absolute bottom-full mb-3 left-0 scale-0 group-hover:scale-100 transition-all duration-300 origin-bottom-left bg-navy-900 text-white text-[10px] px-3 py-1.5 rounded-lg whitespace-nowrap shadow-xl">
+                    WhatsApp pe Documents Bhejein!
+                </span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function toggleChat() {
+            const chat = document.getElementById('chat-window');
+            chat.classList.toggle('hidden');
+            chat.classList.toggle('animate-bounce-short');
+        }
+    </script>
+</body>
+
+</html>
